@@ -14,9 +14,7 @@ return new class extends Migration {
             table: 'exchange_rates',
             callback: function (Blueprint $table): void {
                 $table->id();
-                $table->timestamps();
 
-                $table->id();
                 $table->string(
                     column: 'source_currency',
                     length: 3

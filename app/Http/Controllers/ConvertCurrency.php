@@ -18,6 +18,7 @@ final class ConvertCurrency extends Controller
             'source_currency' => 'required|string|size:3',
             'target_currency' => 'required|string|size:3',
             'value' => 'required|numeric|min:0.01',
+            'state' => 'string'
         ]);
 
         $responseObject = $this->service->convertCurrency(
@@ -25,6 +26,12 @@ final class ConvertCurrency extends Controller
             targetCurrency: strtoupper(string: $validated['target_currency']),
             value: $validated['value']
         );
+
+        if (isset($validated['state'])) {
+            $data = $responseObject->getData(assoc: true);
+            $data['state'] = $validated['state'];
+            $responseObject->setData(data: $data);
+        }
 
         return $responseObject;
     }

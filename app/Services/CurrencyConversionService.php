@@ -2,7 +2,6 @@
 namespace App\Services;
 
 use App\Contracts\CurrencyConversionContract;
-use App\Models\CurrencyConversion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;

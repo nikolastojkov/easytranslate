@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\CurrencyConversion;
-use App\Models\ExchangeRate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -26,7 +25,7 @@ class CurrencyConversionController extends Controller
         $cacheKey = "rate_{$sourceCurrency}_{$targetCurrency}";
         $rate = Cache::remember(
             key: $cacheKey,
-            ttl: now()->addMinutes(value: 60),
+            ttl: now()->addSeconds(value: 10),
             callback: function () use ($sourceCurrency, $targetCurrency): mixed {
                 return $this->fetchExchangeRate(
                     sourceCurrency: $sourceCurrency,
@@ -66,19 +65,7 @@ class CurrencyConversionController extends Controller
 
     private function fetchExchangeRate($sourceCurrency, $targetCurrency): mixed
     {
-        $exchangeRate = ExchangeRate::where(
-            column: 'source_currency',
-            operator: $sourceCurrency
-        )->where(
-                column: 'target_currency',
-                operator: $targetCurrency
-            )->first();
-
-        if ($exchangeRate && $exchangeRate->fetched_at > now()->subMinutes(value: 60)) {
-            return $exchangeRate->rate;
-        }
-
-        $apiKey = config(key: 'fixer.key');
+        $apiKey = env(key: 'FIXER_API_KEY');
         $response = Http::get(
             url: "http://data.fixer.io/api/latest",
             query: [
@@ -90,17 +77,6 @@ class CurrencyConversionController extends Controller
 
         if ($response->successful() && isset($response['rates'][$targetCurrency])) {
             $rate = $response['rates'][$targetCurrency];
-
-            ExchangeRate::updateOrCreate(
-                attributes: [
-                    'source_currency' => $sourceCurrency,
-                    'target_currency' => $targetCurrency
-                ],
-                values: [
-                    'rate' => $rate,
-                    'fetched_at' => now()
-                ]
-            );
 
             return $rate;
         }

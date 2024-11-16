@@ -4,6 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CurrencyConversionController;
 
 Route::post(
-    uri: '/convert-currency',
+    uri: 'v1/convert-currency',
     action: [CurrencyConversionController::class, 'convert']
 );

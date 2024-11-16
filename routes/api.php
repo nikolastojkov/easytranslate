@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CurrencyConversionController;
+use App\Http\Controllers\ConvertCurrency;
 
 Route::post(
     uri: 'v1/convert-currency',
-    action: [CurrencyConversionController::class, 'convert']
+    action: ConvertCurrency::class
 );

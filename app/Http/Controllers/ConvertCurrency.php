@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class CurrencyConversionController extends Controller
+class ConvertCurrency extends Controller
 {
-    public function convert(Request $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         $validated = $request->validate(rules: [
             'source_currency' => 'required|string|size:3',

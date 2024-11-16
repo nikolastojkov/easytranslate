@@ -14,9 +14,15 @@ final readonly class CurrencyConversionService
 
     public function convertCurrency($sourceCurrency, $targetCurrency, $value): JsonResponse
     {
-        $rate = $this->getRate(
-            sourceCurrency: $sourceCurrency,
-            targetCurrency: $targetCurrency
+        $rate = retry(
+            times: 3,
+            callback: function () use ($sourceCurrency, $targetCurrency): mixed {
+                return $this->getRate(
+                    sourceCurrency: $sourceCurrency,
+                    targetCurrency: $targetCurrency
+                );
+            },
+            sleepMilliseconds: 100
         );
 
         if (!$rate) {

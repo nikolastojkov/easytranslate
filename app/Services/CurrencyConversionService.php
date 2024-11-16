@@ -1,13 +1,18 @@
 <?php
 namespace App\Services;
 
+use App\Contracts\CurrencyConversionContract;
 use App\Models\CurrencyConversion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class CurrencyConversionService
+final readonly class CurrencyConversionService
 {
+    public function __construct(protected CurrencyConversionContract $repository)
+    {
+    }
+
     public function convertCurrency($sourceCurrency, $targetCurrency, $value): JsonResponse
     {
         $rate = $this->getRate(
@@ -23,13 +28,13 @@ class CurrencyConversionService
         }
 
         $convertedValue = $value * $rate;
-        $conversionRequest = CurrencyConversion::create(attributes: [
-            'source_currency' => $sourceCurrency,
-            'target_currency' => $targetCurrency,
-            'value' => $value,
-            'converted_value' => $convertedValue,
-            'rate' => $rate,
-        ]);
+        $conversionRequestId = $this->repository->persistCurrencyConversion(
+            sourceCurrency: $sourceCurrency,
+            targetCurrency: $targetCurrency,
+            value: $value,
+            convertedValue: $convertedValue,
+            rate: $rate
+        );
 
         return response()->json(data: [
             'success' => true,
@@ -40,7 +45,7 @@ class CurrencyConversionService
                 'converted_value' => $convertedValue,
                 'rate' => $rate,
             ],
-            'conversion_request_id' => $conversionRequest->id,
+            'conversion_request_id' => $conversionRequestId,
         ]);
     }
 

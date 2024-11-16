@@ -6,7 +6,7 @@ use App\Services\CurrencyConversionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ConvertCurrency extends Controller
+final class ConvertCurrency extends Controller
 {
     public function __construct(private CurrencyConversionService $service)
     {

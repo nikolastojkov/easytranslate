@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Unit\Repositories;
+namespace Tests\Feature\Repositories;
 
 use App\Models\CurrencyConversion;
+use PHPUnit\Framework\Attributes\Test;
 use App\Repositories\CurrencyConversionRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,7 +12,7 @@ class CurrencyConversionRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_persists_currency_conversion_data_in_the_database(): void
     {
         $repository = app(abstract: CurrencyConversionRepository::class);
@@ -27,7 +28,7 @@ class CurrencyConversionRepositoryTest extends TestCase
         $this->assertDatabaseCount(table: 'currency_conversions', count: 1);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_correct_conversion_data_in_the_database(): void
     {
         $repository = app(abstract: CurrencyConversionRepository::class);

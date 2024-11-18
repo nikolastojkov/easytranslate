@@ -8,6 +8,8 @@ The project uses a simple service/repository pattern with a single action contro
 
 We store the exchange rate in a cache for 10 seconds in order not to overwhelm Fixer's API and get rate limited.
 
+An optional field `state` can be sent to the API and get be returned as is.
+
 ### Setup
 - `composer require laravel/sail --dev`
 - `php artisan sail:install`

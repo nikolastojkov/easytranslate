@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services;
 
+use App\Exceptions\CurrencyConversionException;
 use App\Services\CurrencyConversionService;
 use App\Contracts\CurrencyConversionContract;
 use Illuminate\Support\Facades\Cache;
@@ -57,20 +58,16 @@ class CurrencyConversionServiceTest extends TestCase
     #[Test]
     public function it_handles_api_failure(): void
     {
+        $this->expectException(exception: CurrencyConversionException::class);
         Http::fake(callback: [
             'http://data.fixer.io/api/latest*' => Http::response(body: [], status: 500),
         ]);
 
-        $response = $this->service->convertCurrency(
+        $this->service->convertCurrency(
             sourceCurrency: 'USD',
             targetCurrency: 'EUR',
             value: 100
         );
-
-        $data = $response->getData(assoc: true);
-
-        $this->assertArrayHasKey(key: 'error', array: $data);
-        $this->assertEquals(expected: 'Unable to fetch exchange rate.', actual: $data['error']);
     }
 
     #[Test]

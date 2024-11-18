@@ -2,8 +2,18 @@
 
 An interview code challenge by EasyTranslate.
 
-### Dev Plan
-Simple development plan: Create the MVP in the most basic way possible, then work your way
-into over engineering it :)
+### Intro
 
-## TBD
+The project uses a simple service/repository pattern with a single action controller.
+
+We store the exchange rate in a cache for 10 seconds in order not to overwhelm Fixer's API and get rate limited.
+
+### Setup
+- `composer require laravel/sail --dev`
+- `php artisan sail:install`
+- Add a `FIXER_API_KEY` entry in your .env file
+- `./vendor/bin/sail up`
+
+This will setup Laravel's Sail Docker env, and will run it.
+
+You can find your Fixer API Key in the [Dashboard](https://fixer.io/dashboard) after you're logged in
